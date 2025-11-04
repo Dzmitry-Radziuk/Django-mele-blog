@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.urls import reverse_lazy
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -14,7 +14,7 @@ class Post(models.Model):
         PUBLISHED = 'PB', 'Published'
 
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250)
+    slug = models.SlugField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -29,6 +29,7 @@ class Post(models.Model):
                               default=Status.DRAFT)
     objects = models.Manager()
     published = PublishedManager()
+
     class Meta:
         ordering = ['-publish']
         indexes = [
@@ -37,3 +38,11 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse_lazy('blog:post_detail', kwargs={
+            'year': self.publish.year,
+            'month': self.publish.month,
+            'day': self.publish.day,
+            'post': self.slug
+        })
