@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
+from taggit.managers import TaggableManager
+
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -10,7 +12,7 @@ class PublishedManager(models.Manager):
 
 class Post(models.Model):
     class Status(models.TextChoices):
-        DRAFT = 'DF', 'DRAFT'
+        DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
 
     title = models.CharField(max_length=250)
@@ -29,11 +31,12 @@ class Post(models.Model):
                               default=Status.DRAFT)
     objects = models.Manager()
     published = PublishedManager()
+    tags = TaggableManager()
 
     class Meta:
         ordering = ['-publish']
         indexes = [
-            models.Index(fields=['publish']),
+            models.Index(fields=['-publish']),
         ]
 
     def __str__(self):
@@ -46,3 +49,25 @@ class Post(models.Model):
             'day': self.publish.day,
             'post': self.slug
         })
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments')
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['created']
+        indexes = [
+            models.Index(fields=['created']),
+        ]
+
+    def __str__(self):
+        return f'Comment by {self.name} on {self.post}'

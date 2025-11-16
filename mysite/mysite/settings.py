@@ -6,6 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-r+_%9_ujb8di0^1(l)%^lld2odi5xd=62&uw_^*!-ki(t%3u5_'
 
+SITE_ID = 1
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -18,6 +20,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
+    'taggit',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +77,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mgminsk444@gmail.com'
+EMAIL_HOST_PASSWORD = 'joyihbkyzxknnqkb'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+#Пишет письма в консоль
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LANGUAGE_CODE = 'en-us'
 
