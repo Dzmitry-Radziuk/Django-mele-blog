@@ -4,6 +4,8 @@ from .models import Post, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    """Настройки админки для модели Post."""
+
     list_display = ['title', 'slug', 'author', 'publish', 'status']
     search_fields = ['title', 'body']
     list_filter = ['status', 'created', 'publish', 'author']
@@ -12,8 +14,11 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'publish'
     ordering = ['status', 'publish']
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
+    """Настройки админки для модели Comment."""
+
     list_display = ['name', 'email', 'post', 'created', 'active']
     list_filter = ['active', 'created', 'updated']
     search_fields = ['name', 'email', 'body']

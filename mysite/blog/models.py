@@ -6,11 +6,15 @@ from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
+    """Менеджер для получения только опубликованных постов."""
+    
     def get_queryset(self):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 
 class Post(models.Model):
+    """Модель блога — пост с заголовком, телом, автором, статусом и тегами."""
+
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
@@ -52,6 +56,11 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """
+    Модель комментария к посту с именем, email,
+    текстом и статусом активности.
+    """
+
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
